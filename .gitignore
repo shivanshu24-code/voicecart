@@ -1,0 +1,16 @@
+node_modules/
+.next/
+dist/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrets: only the .env.example files are committed
+.env
+.env.local
+.env.*.local
+
+.DS_Store
+Thumbs.db
+*.log

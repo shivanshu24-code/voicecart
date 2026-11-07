@@ -1,0 +1,342 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-paper: #f7f5f0;
+  --color-panel: #efece5;
+  --color-card: #fdfcfa;
+  --color-ink: #1f1e1b;
+  --color-muted: #736f67;
+  --color-line: #e3dfd6;
+  --color-brand: #2f4a3f;
+  --color-brand-dark: #223830;
+  --color-brand-soft: #e8ebe5;
+  --color-accent: #85583b;
+  --color-accent-soft: #f2ebe2;
+  --font-sans: var(--font-instrument), var(--font-noto-devanagari), system-ui, sans-serif;
+  --font-display: var(--font-newsreader), var(--font-noto-serif-devanagari), Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Removes the delay phones add while waiting to see if a tap is a double-tap. */
+  touch-action: manipulation;
+}
+
+/* Every press responds at once, even while the next page loads. */
+a:active,
+button:not(:disabled):active {
+  opacity: 0.75;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Landing page. Everything here is transform and opacity, so it stays smooth. */
+.float {
+  animation: float 7s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -1.4s);
+}
+
+@keyframes float {
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+.screen-cycle {
+  opacity: 0;
+  animation: screen-cycle 15s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 5s);
+}
+
+@keyframes screen-cycle {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  4%,
+  31% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0;
+  }
+}
+
+.logo-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logo-bar 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes logo-bar {
+  to {
+    transform: scaleY(0.55);
+  }
+}
+
+.pulse-dot {
+  position: relative;
+}
+
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: pulse-dot 2.4s ease-out infinite;
+}
+
+@keyframes pulse-dot {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+.order-line {
+  animation: order-line 10s ease infinite backwards;
+  animation-delay: calc(var(--i, 0) * 450ms);
+}
+
+@keyframes order-line {
+  0% {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  6%,
+  84% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.pill-cycle {
+  animation: pill-cycle 7.5s ease infinite;
+  animation-delay: calc(var(--i, 0) * 2.5s);
+}
+
+@keyframes pill-cycle {
+  0%,
+  28% {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: var(--color-paper);
+  }
+  34%,
+  100% {
+    background: transparent;
+    border-color: var(--color-line);
+    color: inherit;
+  }
+}
+
+.marquee {
+  animation: marquee 48s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
+  }
+}
+
+.landing .reveal {
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.landing .lift:hover {
+  transition-delay: 0ms;
+}
+
+/* Storefront motion: small, quick and never in the way of shopping. */
+.lift {
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.35);
+}
+
+.zoom {
+  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.group:hover .zoom {
+  transform: scale(1.05);
+}
+
+.pop {
+  animation: pop 260ms cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+  }
+}
+
+/* Listed after .lift because one element can be both. */
+.reveal {
+  transition: transform 220ms ease, box-shadow 220ms ease, opacity 500ms ease, translate 500ms ease;
+}
+
+.reveal-wait {
+  opacity: 0;
+  translate: 0 18px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* One-time entrance for the login page. */
+.rise {
+  animation: rise 800ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/*
+ * Voice demo. Every part shares one 14s cycle, so the delays keep it in step:
+ * words are "spoken" first, then the shop details appear, then it all resets.
+ */
+.voice-word {
+  opacity: 0.22;
+  animation: voice-word 14s linear infinite backwards;
+  animation-delay: calc(var(--i) * 170ms + 500ms);
+}
+
+@keyframes voice-word {
+  0% {
+    opacity: 0.22;
+  }
+  2.5%,
+  72% {
+    opacity: 1;
+  }
+  78%,
+  100% {
+    opacity: 0.22;
+  }
+}
+
+.voice-field {
+  animation: voice-field 14s cubic-bezier(0.2, 0.7, 0.2, 1) infinite backwards;
+  animation-delay: calc(var(--i) * 500ms + 4400ms);
+}
+
+@keyframes voice-field {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  5%,
+  70% {
+    opacity: 1;
+    transform: none;
+  }
+  76%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+.voice-wave {
+  animation: voice-wave 14s ease infinite;
+}
+
+@keyframes voice-wave {
+  0%,
+  30% {
+    opacity: 1;
+  }
+  36%,
+  94% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.voice-bar {
+  transform: scaleY(0.25);
+  animation: voice-bar 1.3s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i) * -170ms);
+}
+
+@keyframes voice-bar {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .pop,
+  .float,
+  .screen-cycle,
+  .logo-bar,
+  .pulse-dot::after,
+  .order-line,
+  .pill-cycle,
+  .marquee,
+  .voice-word,
+  .voice-field,
+  .voice-wave,
+  .voice-bar {
+    animation: none;
+  }
+
+  .lift,
+  .zoom {
+    transition: none;
+  }
+
+  .lift:hover,
+  .group:hover .zoom {
+    transform: none;
+  }
+
+  .voice-word {
+    opacity: 1;
+  }
+
+  .screen-cycle:first-of-type {
+    opacity: 1;
+  }
+
+  .voice-bar {
+    transform: scaleY(0.6);
+  }
+}

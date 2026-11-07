@@ -1,0 +1,668 @@
+{
+  "common": {
+    "appName": "VoiceCart",
+    "language": "Language",
+    "signOut": "Sign out"
+  },
+  "login": {
+    "title": "Your shop, in your own words.",
+    "subtitle": "Describe your shop out loud. VoiceCart turns it into a storefront you can share with your customers.",
+    "google": "Continue with Google",
+    "failed": "Sign-in didn't work. Please try again.",
+    "notConfigured": "Google sign-in isn't set up yet. Add the Supabase keys to turn it on.",
+    "openPreview": "Open dashboard preview",
+    "footnote": "Works in English and Hindi.",
+    "demo": {
+      "caption": "Example of a shop described by voice",
+      "spoken": "We are Sharma Store, a kirana in Indore. Open nine to nine, closed on Sundays. Atta is forty rupees a kilo.",
+      "shopLabel": "Shop",
+      "shopValue": "Sharma Store, Indore",
+      "hoursLabel": "Hours",
+      "hoursValue": "9 am – 9 pm, closed Sunday",
+      "productLabel": "Product",
+      "productValue": "Atta, ₹40 per kg"
+    },
+    "privacy": "Privacy policy"
+  },
+  "nav": {
+    "overview": "Overview",
+    "products": "Products",
+    "hours": "Opening hours",
+    "website": "Website",
+    "soon": "Soon"
+  },
+  "dashboard": {
+    "greeting": "Welcome, {name}",
+    "greetingFallback": "Welcome",
+    "subtitle": "Here's how your shops are doing.",
+    "previewBanner": "Preview with sample data. Nothing here is saved until the Supabase keys are added.",
+    "loadFailed": "We couldn't load your shops. Check that the backend is running, then refresh.",
+    "stats": {
+      "shops": "Shops",
+      "published": "Published",
+      "drafts": "Drafts",
+      "products": "Products"
+    },
+    "shops": {
+      "title": "Your shops",
+      "emptyTitle": "No shops yet",
+      "emptyBody": "Create your first shop to get started.",
+      "productCount": "{count, plural, =0 {No products} one {# product} other {# products}}",
+      "published": "Published",
+      "draft": "Draft",
+      "setup": "Set up by voice",
+      "publish": "Preview and publish",
+      "manage": "Manage"
+    },
+    "create": {
+      "title": "Create a shop",
+      "name": "Shop name",
+      "namePlaceholder": "Sharma Kirana Store",
+      "category": "Category",
+      "submit": "Create shop",
+      "submitting": "Creating…",
+      "failed": "We couldn't create the shop. Please try again.",
+      "previewDisabled": "Creating shops needs the Supabase keys."
+    },
+    "voice": {
+      "title": "Voice setup",
+      "body": "Open a shop and choose “Set up by voice” to describe it out loud."
+    }
+  },
+  "categories": {
+    "grocery": "Grocery",
+    "clothing": "Clothing",
+    "electronics": "Electronics",
+    "bakery": "Bakery",
+    "other": "Other"
+  },
+  "setup": {
+    "back": "Back to dashboard",
+    "consent": {
+      "title": "Before you start",
+      "body": "Your voice is sent to Sarvam to turn it into text, and that text is sent to Google Gemini to pick out your shop's details. We don't store the audio, but we do keep the text of your answers so you can continue later. Please don't share anyone else's personal details.",
+      "agree": "I agree, continue"
+    },
+    "record": "Start recording",
+    "stop": "Stop recording",
+    "hint": "Tap to speak, or type your answer below.",
+    "transcribing": "Turning your voice into text…",
+    "answerLabel": "Your answer (check it and fix any mistakes)",
+    "answerPlaceholder": "Your words appear here. You can also type.",
+    "send": "Send answer",
+    "sending": "Reading your answer…",
+    "sofar": "What we have so far",
+    "review": "Review details",
+    "days": "{count, plural, one {# day} other {# days}}",
+    "reviewTitle": "Check your shop details",
+    "reviewBody": "Nothing is saved until you confirm. Fix anything that doesn't look right.",
+    "save": "Confirm and save",
+    "saving": "Saving…",
+    "keepTalking": "Keep talking",
+    "remove": "Remove product",
+    "opens": "Opens",
+    "closes": "Closes",
+    "closed": "Closed",
+    "fields": {
+      "name": "Shop name",
+      "category": "Category",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "address": "Address",
+      "description": "Description",
+      "hours": "Opening hours",
+      "products": "Products",
+      "productName": "Product name",
+      "price": "Price in rupees",
+      "unit": "Unit"
+    },
+    "errors": {
+      "failed": "That didn't work. Please try again.",
+      "quota": "You've reached today's limit. Please try again tomorrow.",
+      "tooLong": "That recording is too long. Please try a shorter one.",
+      "micDenied": "We can't reach your microphone. Allow access in your browser, or type your answer.",
+      "noSpeech": "We didn't catch that. Please try again.",
+      "contact": "Add a phone or WhatsApp number so customers can reach you."
+    },
+    "addProduct": "Add a product"
+  },
+  "storefront": {
+    "products": "Products",
+    "menu": "Menu",
+    "hours": "Opening hours",
+    "visit": "Visit us",
+    "directions": "Get directions",
+    "closed": "Closed",
+    "askPrice": "Ask for price",
+    "unavailable": "Currently unavailable",
+    "whatsapp": "WhatsApp",
+    "call": "Call",
+    "whatsappMessage": "Hello {shop}, I found your shop online.",
+    "madeWith": "Made with VoiceCart",
+    "notFoundTitle": "This shop isn't available",
+    "notFoundBody": "The link may be wrong, or the shop may not be online right now.",
+    "rateBoard": "A few of our prices",
+    "whatWeSell": "What we sell",
+    "contactTitle": "Order or ask",
+    "contactBody": "Message or call us to check prices and availability.",
+    "fromTheMenu": "From our menu",
+    "collection": "The collection",
+    "visitStore": "Visit the store",
+    "spotlight": "In the spotlight",
+    "whatWeOffer": "What we offer",
+    "pieces": "{count, plural, one {# piece} other {# pieces}}",
+    "taglines": {
+      "grocery": "Your neighbourhood store for everyday essentials.",
+      "bakery": "Made for the moments worth sharing.",
+      "clothing": "Pieces chosen with care, for every occasion.",
+      "electronics": "Find what you need, and ask us anything before you buy.",
+      "other": "See what we offer, and reach us in one tap."
+    },
+    "priceFrom": "From {price}",
+    "moreOptions": "{shown} · +{count} more",
+    "productGroups": "Product groups",
+    "otherItems": "More items",
+    "viewProduct": "View {product}",
+    "viewDetails": "View details",
+    "chooseOption": "Choose an option",
+    "close": "Close",
+    "orderOnWhatsapp": "Order on WhatsApp",
+    "askOnWhatsapp": "Ask on WhatsApp",
+    "orderMessage": "Hello {shop}, I'd like to order: {item} ({price}).",
+    "askMessage": "Hello {shop}, I'd like to know more about: {item}.",
+    "viewPhoto": "View photo {number}",
+    "openNow": "Open now",
+    "closedNow": "Closed",
+    "openUntil": "until {time}",
+    "opensToday": "opens at {time}",
+    "opensTomorrow": "opens tomorrow at {time}",
+    "opensOn": "opens {day} at {time}",
+    "searchLabel": "Search products",
+    "searchPlaceholder": "Search products",
+    "searchClear": "Clear search",
+    "searchEmpty": "Nothing found for “{query}”. Try another word, or ask us on WhatsApp.",
+    "searchCount": "{count, plural, one {# product found} other {# products found}}",
+    "addToOrder": "Add to order",
+    "yourOrder": "Your order",
+    "viewOrder": "View order",
+    "orderItems": "{count, plural, one {# item} other {# items}}",
+    "sendOrder": "Send order on WhatsApp",
+    "clearOrder": "Clear order",
+    "orderNote": "The shop will confirm availability and the final price on WhatsApp.",
+    "priceToConfirm": "Price to confirm",
+    "orderTotal": "Total: {price}",
+    "orderTotalPartial": "Total so far: {price}",
+    "orderIntro": "Hello {shop}, I'd like to order:",
+    "less": "One less {item}",
+    "more": "One more {item}",
+    "shopNow": "Shop now",
+    "add": "Add",
+    "choose": "Choose",
+    "addItem": "Add {item} to order",
+    "soldOut": "Sold out",
+    "allProducts": "All products",
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "previous": "Previous",
+    "next": "Next",
+    "orderTotalUnknown": "The shop will confirm the prices",
+    "privacy": "Privacy"
+  },
+  "publish": {
+    "back": "Back to dashboard",
+    "needsTitle": "Before you can publish",
+    "finishByVoice": "Describe your shop by voice",
+    "blockers": {
+      "contact": "Add a phone or WhatsApp number.",
+      "contact_unconfirmed": "Confirm your contact number.",
+      "address": "Add your address.",
+      "hours": "Add your opening hours.",
+      "products": "Add at least one product."
+    },
+    "templateTitle": "Choose a look",
+    "templates": {
+      "grocery": {
+        "name": "Market",
+        "body": "Deep green, with a board of your prices"
+      },
+      "bakery": {
+        "name": "Patisserie",
+        "body": "Warm and elegant, with a printed-style menu"
+      },
+      "clothing": {
+        "name": "Atelier",
+        "body": "Bold editorial type and fabric-toned tiles"
+      },
+      "electronics": {
+        "name": "Showroom",
+        "body": "Dark and precise, with product specs"
+      },
+      "generic": {
+        "name": "Classic",
+        "body": "A calm brand panel, for any kind of shop"
+      },
+      "storefront": {
+        "name": "Storefront",
+        "body": "Online-shop grid with one-tap add"
+      },
+      "shelves": {
+        "name": "Shelves",
+        "body": "Swipeable rows for each category"
+      },
+      "menucard": {
+        "name": "Menu Card",
+        "body": "Printed-style menu with quick ordering"
+      },
+      "lookbook": {
+        "name": "Lookbook",
+        "body": "Big opening and a large photo wall"
+      }
+    },
+    "addressTitle": "Your web address",
+    "addressOk": "This address is available.",
+    "addressTaken": "That address is taken. Try another.",
+    "addressInvalid": "Use at least 3 lowercase letters or numbers, with hyphens between words.",
+    "addressChecking": "Checking…",
+    "addressLocked": "This stays the same so your shared links keep working.",
+    "publish": "Publish shop",
+    "saveChanges": "Save changes",
+    "unpublish": "Take offline",
+    "liveTitle": "Your shop is live",
+    "copy": "Copy link",
+    "copied": "Copied",
+    "shareWhatsapp": "Share on WhatsApp",
+    "qrAlt": "QR code for your shop",
+    "downloadQr": "Download QR code",
+    "previewTitle": "Preview",
+    "previewSize": "Preview size",
+    "mobile": "Phone view",
+    "desktop": "Computer view",
+    "errors": {
+      "failed": "That didn't work. Please try again.",
+      "taken": "That address was just taken. Try another."
+    },
+    "galleryTitle": "Choose your design",
+    "galleryBody": "Each design is shown with your shop's details.",
+    "gallerySample": "These use example products for now. Your own details replace them after you describe your shop.",
+    "editProducts": "Edit products",
+    "brandTitle": "Logo and banner",
+    "brandBody": "These show on your website as soon as you add them.",
+    "logo": "Logo",
+    "banner": "Banner photo",
+    "editDetails": "Edit shop details",
+    "finishByTyping": "Fill in by typing",
+    "galleryKinds": "Designs by shop type"
+  },
+  "products": {
+    "title": "Products at {shop}",
+    "body": "Changes show on your website as soon as you save them.",
+    "back": "Back to your website",
+    "add": "Add product",
+    "addByVoice": "Add by voice",
+    "empty": "No products yet. Add your first one above.",
+    "name": "Product name",
+    "group": "Group",
+    "description": "Description (optional)",
+    "priceType": "Price type",
+    "kinds": {
+      "fixed": "One price",
+      "from": "Starting at",
+      "range": "Price range",
+      "options": "Different options",
+      "request": "Price on request"
+    },
+    "price": "Price in rupees",
+    "priceLow": "Lowest price",
+    "priceHigh": "Highest price",
+    "unit": "Per (optional)",
+    "optionsTitle": "Options with their own price",
+    "optionName": "Option name",
+    "addOption": "Add an option",
+    "removeOption": "Remove option",
+    "choicesTitle": "Choices at the same price, such as flavours or colours",
+    "choiceName": "Choice name",
+    "choiceValues": "Choices, separated by commas",
+    "addChoice": "Add a choice",
+    "removeChoice": "Remove choice",
+    "inStock": "In stock",
+    "save": "Save product",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Yes, delete",
+    "moveUp": "Move {product} up",
+    "moveDown": "Move {product} down",
+    "voiceTitle": "Describe your products",
+    "voiceExample": "For example: “Truffle cake is 450 for half a kilo and 850 for one kilo.”",
+    "voiceHint": "Tap to speak, or type below.",
+    "record": "Start recording",
+    "stop": "Stop recording",
+    "transcribing": "Turning your voice into text…",
+    "readItems": "Create products",
+    "reading": "Reading…",
+    "errors": {
+      "failed": "That didn't work. Please try again.",
+      "exists": "You already have a product with this name.",
+      "limit": "This shop has reached the limit of 200 products.",
+      "quota": "You've reached today's limit. Please try again tomorrow.",
+      "tooLong": "That recording is too long. Please try a shorter one.",
+      "micDenied": "We can't reach your microphone. Allow access in your browser, or type instead.",
+      "noSpeech": "We didn't catch that. Please try again.",
+      "nothingFound": "We couldn't find a product in that. Try naming the item and its price.",
+      "photoFailed": "That photo didn't upload. Please try again.",
+      "photoType": "Please choose a photo file.",
+      "photoSize": "That photo is too large. Please use one under 10 MB."
+    },
+    "hints": {
+      "bakery": {
+        "group": "Cakes",
+        "unit": "kg",
+        "option": "Half kg",
+        "choiceName": "Flavour",
+        "choiceValues": "Chocolate, Vanilla"
+      },
+      "clothing": {
+        "group": "Kurtis",
+        "unit": "piece",
+        "option": "Cotton",
+        "choiceName": "Size",
+        "choiceValues": "S, M, L, XL"
+      },
+      "electronics": {
+        "group": "Phones",
+        "unit": "piece",
+        "option": "8 GB / 128 GB",
+        "choiceName": "Colour",
+        "choiceValues": "Black, Blue"
+      },
+      "grocery": {
+        "group": "Staples",
+        "unit": "kg",
+        "option": "1 kg",
+        "choiceName": "Brand",
+        "choiceValues": "Aashirvaad, Pillsbury"
+      },
+      "other": {
+        "group": "Popular",
+        "unit": "piece",
+        "option": "Small",
+        "choiceName": "Colour",
+        "choiceValues": "Red, Blue"
+      }
+    },
+    "photos": "Photos (the first one is the cover)",
+    "addPhoto": "Add photos",
+    "removePhoto": "Remove photo",
+    "makeCover": "Make this the cover",
+    "uploading": "Uploading…",
+    "addPhotoOf": "Add a photo for {name}",
+    "removePhotoOf": "Remove the photo for {name}"
+  },
+  "details": {
+    "title": "Details of {shop}",
+    "body": "Changes show on your website as soon as you save them.",
+    "back": "Back to your website",
+    "name": "Shop name",
+    "category": "Category",
+    "description": "About your shop",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "address": "Address",
+    "contactHint": "Customers use these numbers to reach you. Add at least one.",
+    "hours": "Opening hours",
+    "open": "Open",
+    "closed": "Closed",
+    "opens": "Opens",
+    "closes": "Closes",
+    "addBreak": "Add a break",
+    "removeSlot": "Remove these hours",
+    "copyFirst": "Use {day}'s hours for every day",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "errors": {
+      "failed": "That didn't work. Please check the details and try again.",
+      "incomplete": "A live shop needs a phone or WhatsApp number, an address and at least one open day.",
+      "times": "An opening and closing time can't be the same."
+    }
+  },
+  "landing": {
+    "home": "VoiceCart home",
+    "mainNav": "Main",
+    "signIn": "Sign in",
+    "start": "Get started",
+    "privacy": "Privacy",
+    "nav": {
+      "how": "How it works",
+      "features": "Features",
+      "designs": "Designs",
+      "faq": "Questions"
+    },
+    "meta": {
+      "title": "VoiceCart | Your shop's website, just by speaking",
+      "description": "Describe your shop out loud in Hindi or English. VoiceCart turns it into a professional website your customers can browse and order from on WhatsApp."
+    },
+    "hero": {
+      "eyebrow": "Made for local shops",
+      "title": "Your shop, online. Just by speaking.",
+      "body": "Describe your shop out loud in Hindi or English. VoiceCart turns it into a professional website your customers can browse and order from on WhatsApp.",
+      "cta": "Create your shop",
+      "secondary": "See how it works",
+      "note": "No coding. No designer. You check everything before it goes live.",
+      "visual": {
+        "spoken": "Cakes are 500 to 2000 rupees…",
+        "open": "Open now · until 9 pm",
+        "openShort": "Open now",
+        "orderTitle": "New order",
+        "order": "Truffle cake, 1 kg × 2 — ₹1,700",
+        "share": "Share by link or QR",
+        "bakery": "Your Bakery",
+        "grocery": "Your Kirana",
+        "clothing": "Your Boutique",
+        "items": {
+          "cake": "Truffle Cake",
+          "pastry": "Pastry",
+          "bread": "Bread",
+          "cookies": "Cookies",
+          "atta": "Atta",
+          "rice": "Basmati Rice",
+          "oil": "Mustard Oil",
+          "dal": "Toor Dal",
+          "kurta": "Cotton Kurta",
+          "saree": "Saree",
+          "dupatta": "Dupatta",
+          "stole": "Silk Stole"
+        }
+      }
+    },
+    "how": {
+      "title": "From your voice to your website in three steps",
+      "speak": {
+        "title": "Speak",
+        "body": "Tap the microphone and talk about your shop: what you sell, your prices and when you're open. Prefer typing? That works too."
+      },
+      "review": {
+        "title": "Review",
+        "body": "VoiceCart fills in your shop's details and asks about anything missing. You correct what you like. Nothing is saved until you confirm."
+      },
+      "publish": {
+        "title": "Publish",
+        "body": "Pick a design, add your photos and go live. Share your link or QR code with customers on WhatsApp."
+      }
+    },
+    "features": {
+      "title": "Everything a local shop needs to look professional",
+      "body": "Built around how shops in India really sell, from price ranges to WhatsApp orders.",
+      "voice": {
+        "title": "Set up by voice",
+        "body": "Speak in Hindi or English. VoiceCart picks out your products, prices, hours and contact details.",
+        "sample": "Pastries are 60 rupees in chocolate and vanilla"
+      },
+      "order": {
+        "title": "Orders straight to WhatsApp",
+        "body": "Customers fill an order list and send it in one clear message, with every item, size and price.",
+        "intro": "Hello, I'd like to order:",
+        "line1": "1. Truffle cake, 1 kg × 2 — ₹1,700",
+        "line2": "2. Pastry, vanilla × 3 — ₹180",
+        "line3": "3. Wedding cake × 1 — price to confirm",
+        "total": "Total so far: ₹1,880"
+      },
+      "variety": {
+        "title": "Real prices, real variety",
+        "body": "Sizes, flavours, colours, price ranges and “starting at” prices.",
+        "half": "Half kg",
+        "one": "1 kg",
+        "two": "2 kg"
+      },
+      "open": {
+        "title": "Always-right hours",
+        "body": "An Open now label worked out from your hours, even with an afternoon break.",
+        "sample": "Open now · until 9 pm"
+      },
+      "review": {
+        "title": "Nothing made up",
+        "body": "The AI can only use what you said, and you confirm every detail before anything is published."
+      },
+      "photos": {
+        "title": "Your photos",
+        "body": "Upload from your phone, with separate photos for each colour or size."
+      },
+      "search": {
+        "title": "Easy to browse",
+        "body": "Customers can search and jump between your categories."
+      },
+      "share": {
+        "title": "Link and QR code",
+        "body": "A clean web address and a QR code to print for your counter."
+      },
+      "editor": {
+        "title": "Update any time",
+        "body": "Change prices, mark items sold out, or edit your hours in seconds."
+      }
+    },
+    "designs": {
+      "title": "25 designs, chosen for your kind of shop",
+      "body": "Five for each shop type, from online-shop grids to printed-style menus. Switch whenever you like."
+    },
+    "faq": {
+      "title": "Good questions",
+      "skills": {
+        "q": "Do I need any technical skills?",
+        "a": "No. If you can describe your shop on the phone, you can use VoiceCart. There's no coding, and no design work."
+      },
+      "languages": {
+        "q": "Which languages can I use?",
+        "a": "You can speak or type in Hindi or English, and use the app and your website in either language."
+      },
+      "invent": {
+        "q": "Could the AI get my details wrong?",
+        "a": "Voice recognition can make mistakes, so you see the words first and can correct them. VoiceCart only uses what you said, and nothing is saved until you check it."
+      },
+      "voice": {
+        "q": "Is my voice recording stored?",
+        "a": "No. Your audio is sent to our speech provider to turn it into text and isn't stored by VoiceCart. Our privacy policy explains the details."
+      },
+      "orders": {
+        "q": "How do customers pay?",
+        "a": "Customers send their order to you on WhatsApp, and you agree payment and delivery with them directly, the way you do today. VoiceCart doesn't take online payments yet."
+      },
+      "edit": {
+        "q": "Can I change things after publishing?",
+        "a": "Yes. You can update products, prices, photos, hours and your design at any time, or take your shop offline."
+      }
+    },
+    "final": {
+      "title": "Your customers are already looking for you.",
+      "body": "Give them somewhere to find your shop, see your products and reach you."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "updated": "Last updated: 6 November 2026",
+    "intro": "VoiceCart helps shop owners create a website by describing their shop. This policy explains what we collect, why we collect it and the choices you have. We've written it in plain language.",
+    "contactTitle": "Contact us",
+    "contactBody": "For any privacy question, or to correct or delete your information, contact us at:",
+    "sections": [
+      {
+        "title": "What we collect from shop owners",
+        "points": [
+          "Account details: your name, email address and profile picture from Google when you sign in.",
+          "Shop details: your shop's name, category, description, phone and WhatsApp numbers, address and opening hours.",
+          "Products: names, descriptions, prices, options and the photos, logo and banner you upload.",
+          "Voice setup: the text of your spoken or typed answers.",
+          "Usage records: how many AI requests your account makes, so we can apply daily limits and manage cost."
+        ]
+      },
+      {
+        "title": "Your voice recordings",
+        "body": "When you use the microphone, your audio goes to our speech provider to be turned into text. VoiceCart does not store the audio. We do keep the text of your answers so you can review them and continue your setup later. Please don't share anyone else's personal details while recording."
+      },
+      {
+        "title": "What we collect from customers",
+        "body": "Customers can browse a shop without an account, and we don't ask them for personal details. An order list stays in the customer's own browser until they clear it. When a customer sends an order, it goes through WhatsApp directly to the shop, so VoiceCart doesn't receive it. We keep a small cookie to remember the chosen language. Each shop is responsible for how it handles the orders and messages it receives."
+      },
+      {
+        "title": "How we use information",
+        "points": [
+          "To create, show and update your shop's website.",
+          "To sign you in and keep your account secure.",
+          "To turn your voice into text and pick out your shop's details.",
+          "To apply fair usage limits and fix problems."
+        ]
+      },
+      {
+        "title": "What is public",
+        "body": "Once you publish a shop, its name, description, products, prices, photos, address, hours and contact numbers are visible to anyone with the link. Draft shops are private. You can take your shop offline at any time."
+      },
+      {
+        "title": "Who we share information with",
+        "body": "We don't sell your information and we don't show advertising. We share only what's needed with the services that run VoiceCart:",
+        "points": [
+          "Supabase: secure database and sign-in.",
+          "Sarvam: turns voice into text.",
+          "Google Gemini: picks out shop details from your text.",
+          "Cloudinary: stores and delivers photos.",
+          "Google: sign-in.",
+          "Our hosting provider: runs the website."
+        ]
+      },
+      {
+        "title": "Where information is stored",
+        "body": "Our database is hosted in India. Some of the services above may process information in other countries, under their own privacy terms."
+      },
+      {
+        "title": "How long we keep information",
+        "body": "We keep your account and shop information while your account is open, and the text of your setup answers for as long as your shop needs it. When you ask us to delete your account, we remove your information from our active systems, except where we must keep it by law. Copies held in backups or by service providers can take some time to clear."
+      },
+      {
+        "title": "Your choices",
+        "points": [
+          "Correct your shop's details and products in your dashboard at any time.",
+          "Take your shop offline at any time.",
+          "Ask us for a copy of your information.",
+          "Ask us to delete your account and information. Deleting from inside the app isn't available yet, so please contact us."
+        ]
+      },
+      {
+        "title": "Security",
+        "body": "Access to your shop's information is limited to your account, and connections are encrypted. Secret keys stay on our servers. No online service can be completely secure, so please keep your Google account safe."
+      },
+      {
+        "title": "Children",
+        "body": "VoiceCart is meant for shop owners who are adults. We don't knowingly collect information from children."
+      },
+      {
+        "title": "Changes to this policy",
+        "body": "If we change this policy, we'll update the date at the top of this page. For important changes, we'll also let shop owners know."
+      }
+    ]
+  },
+  "consent": {
+    "title": "Before you continue",
+    "body": "Please read how VoiceCart looks after your information. You only need to do this once.",
+    "note": "By continuing, you agree to this Privacy Policy.",
+    "agree": "Agree & Continue",
+    "decline": "Sign out",
+    "failed": "That didn't work. Please try again."
+  }
+}
