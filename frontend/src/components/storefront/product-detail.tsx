@@ -3,7 +3,7 @@
 import { MessageCircle, Phone, Plus, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { imageUrl } from "@/lib/images";
+import { imageSrcSet, imageUrl } from "@/lib/images";
 import { fixedPaise } from "@/lib/order";
 import {
   coverOf,
@@ -87,7 +87,7 @@ function Details({ product, shop, onClose }: Props & { onClose: () => void }) {
       {photo && (
         <div className="md:sticky md:top-0 md:self-start">
           {/* eslint-disable-next-line @next/next/no-img-element -- Cloudinary sizes and compresses these */}
-          <img src={imageUrl(photo, { width: 1000, height: 1000 })} alt={product.name} className="aspect-[4/3] w-full object-cover md:aspect-square" />
+          <img src={imageUrl(photo, { width: 1000, height: 1000 })} srcSet={imageSrcSet(photo, { width: 1000, height: 1000 })} sizes="(min-width: 768px) 384px, 100vw" alt={product.name} className="aspect-[4/3] w-full object-cover md:aspect-square" />
       {photos.length > 1 && (
         <div className="flex gap-2 overflow-x-auto px-6 pt-3 md:px-3 md:pb-3">
           {photos.map((url, index) => (

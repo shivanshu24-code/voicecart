@@ -11,7 +11,7 @@ const MAX_SIDE = 2400;
 const SHRINK_ABOVE = 1.5 * 1024 * 1024;
 
 /** Phone photos are large, so they're made smaller here to upload faster on mobile data. */
-async function shrink(file: File): Promise<Blob> {
+export async function shrink(file: File): Promise<Blob> {
   // PNGs are left alone because logos often need their transparent background.
   if (file.size < SHRINK_ABOVE || file.type === "image/png") return file;
 

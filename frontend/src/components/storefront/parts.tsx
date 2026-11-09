@@ -2,7 +2,7 @@ import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { imageUrl } from "@/lib/images";
+import { imageSrcSet, imageUrl } from "@/lib/images";
 import { HideWhileSearching, SearchBox, SearchResults } from "./search";
 import {
   cityOf,
@@ -42,15 +42,22 @@ type PhotoProps = {
   height?: number;
   className?: string;
   eager?: boolean;
+  /** How wide the photo shows, so the browser can pick a smaller copy. */
+  sizes?: string;
 };
 
-export function Photo({ src, alt, width, height, className = "", eager = false }: PhotoProps) {
+export function Photo({ src, alt, width, height, className = "", eager = false, sizes = "100vw" }: PhotoProps) {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- Cloudinary sizes and compresses these
     <img
       src={imageUrl(src, { width, height })}
+      srcSet={imageSrcSet(src, { width, height })}
+      sizes={sizes}
       alt={alt}
       loading={eager ? "eager" : "lazy"}
+      // The photo at the top of a shop is what people wait for, so it goes first.
+      fetchPriority={eager ? "high" : undefined}
+      decoding="async"
       className={`object-cover ${className}`}
     />
   );

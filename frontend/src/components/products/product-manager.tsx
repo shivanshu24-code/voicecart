@@ -1,12 +1,13 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Mic, Plus, Square } from "lucide-react";
+import { ArrowDown, ArrowUp, Camera, Copy, FileSpreadsheet, Mic, Plus, Square } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useCallback, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import {
   createProduct,
   deleteProduct,
   extractProducts,
+  readProductPhoto,
   reorderProducts,
   transcribeProducts,
   updateProduct,
@@ -21,8 +22,9 @@ import {
   type ProductDraft,
   type ProductPayload,
 } from "@/lib/product-draft";
+import { draftsFromRows, parseCsv, type SheetResult } from "@/lib/spreadsheet";
 import type { ProductRow } from "@/lib/storefront";
-import { UploadTracker } from "./photo-upload";
+import { shrink, UploadTracker } from "./photo-upload";
 import { ProductFields, type ShopKind } from "./product-fields";
 
 const button = "rounded-md px-4 py-2 font-medium transition-colors disabled:opacity-40";
@@ -35,6 +37,8 @@ const errorKey = (code: string) => {
   if (code === "product_limit") return "limit";
   if (code === "ai_quota_exceeded") return "quota";
   if (code === "audio_too_large") return "tooLong";
+  if (code === "photo_unsupported") return "photoType";
+  if (code === "photo_too_large") return "photoSize";
   return "failed";
 };
 
@@ -45,10 +49,13 @@ type EditorProps = {
   groups: string[];
   onSave: (payload: ProductPayload) => Promise<string | null>;
   onCancel: () => void;
+  /** Lets "Save all" save this form, under saveKey. Returns an unregister function. */
+  register?: (key: number, save: () => Promise<boolean>) => () => void;
+  saveKey?: number;
 };
 
 /** One product's form. Saving reports an error key, or null when it worked. */
-function ProductEditor({ shopId, initial, shopKind, groups, onSave, onCancel }: EditorProps) {
+function ProductEditor({ shopId, initial, shopKind, groups, onSave, onCancel, register, saveKey }: EditorProps) {
   const t = useTranslations("products");
   const [draft, setDraft] = useState(initial);
   const [saving, setSaving] = useState(false);
@@ -56,13 +63,32 @@ function ProductEditor({ shopId, initial, shopKind, groups, onSave, onCancel }: 
   const [uploads, setUploads] = useState(0);
   const trackUpload = useCallback((change: number) => setUploads((count) => count + change), []);
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
+  /** Saves the form. Reports whether it worked, so "Save all" can count failures. */
+  async function save() {
+    if (uploads > 0) {
+      setError("stillUploading");
+      return false;
+    }
     setSaving(true);
     setError(null);
     const failure = await onSave(payloadFromDraft(draft));
     setSaving(false);
     setError(failure);
+    return failure === null;
+  }
+
+  // "Save all" calls whatever this render's save is, with the latest draft.
+  const latestSave = useRef(save);
+  useEffect(() => {
+    latestSave.current = save;
+  });
+  useEffect(() => {
+    if (register && saveKey !== undefined) return register(saveKey, () => latestSave.current());
+  }, [register, saveKey]);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    await save();
   }
 
   return (
@@ -94,7 +120,7 @@ function VoiceAdd({ shopId, onDrafts }: { shopId: string; onDrafts: (drafts: Pro
 
   const [agreed, setAgreed] = useState(false);
   const [text, setText] = useState("");
-  const [busy, setBusy] = useState<"transcribe" | "read" | null>(null);
+  const [busy, setBusy] = useState<"transcribe" | "photo" | "read" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const onAudio = useCallback(
@@ -112,6 +138,26 @@ function VoiceAdd({ shopId, onDrafts }: { shopId: string; onDrafts: (drafts: Pro
     [shopId],
   );
   const onDenied = useCallback(() => setError("micDenied"), []);
+
+  /** A photo of a rate list or bill becomes text here, so the owner can fix misreads first. */
+  async function onPhoto(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("photoType");
+      return;
+    }
+    setBusy("photo");
+    setError(null);
+    const form = new FormData();
+    form.append("photo", await shrink(file), file.name);
+    const result = await readProductPhoto(shopId, form);
+    setBusy(null);
+    if (!result.ok) setError(errorKey(result.code));
+    else if (!result.data.text) setError("photoNothing");
+    else setText((current) => [current, result.data.text].filter(Boolean).join("\n"));
+  }
   const { recording, seconds, start, stop } = useRecorder(onAudio, onDenied);
 
   async function read() {
@@ -130,7 +176,7 @@ function VoiceAdd({ shopId, onDrafts }: { shopId: string; onDrafts: (drafts: Pro
   if (!agreed) {
     return (
       <section className="rounded-md bg-panel p-4 md:p-5">
-        <p className="text-sm leading-relaxed text-muted">{consent("body")}</p>
+        <p className="text-sm leading-relaxed text-muted">{t("aiConsent")}</p>
         <button type="button" onClick={() => setAgreed(true)} className={`${primary} mt-4`}>
           {consent("agree")}
         </button>
@@ -156,9 +202,15 @@ function VoiceAdd({ shopId, onDrafts }: { shopId: string; onDrafts: (drafts: Pro
           {recording ? `${seconds}s / ${MAX_SECONDS}s` : busy === "transcribe" ? t("transcribing") : t("voiceHint")}
         </span>
       </div>
+      <label className={`${secondary} mt-3 inline-flex cursor-pointer items-center gap-2 text-sm has-[:disabled]:cursor-default has-[:disabled]:opacity-40`}>
+        <Camera aria-hidden size={16} strokeWidth={1.5} />
+        {busy === "photo" ? t("photoReading") : t("photoButton")}
+        <input type="file" accept="image/*" onChange={onPhoto} disabled={busy !== null || recording} className="sr-only" />
+      </label>
+      <p className="mt-1 text-xs text-muted">{t("photoHint")}</p>
       <textarea
         aria-label={t("voiceTitle")}
-        rows={3}
+        rows={text.includes("\n") ? 8 : 3}
         maxLength={2000}
         value={text}
         onChange={(event) => setText(event.target.value)}
@@ -176,6 +228,126 @@ function VoiceAdd({ shopId, onDrafts }: { shopId: string; onDrafts: (drafts: Pro
   );
 }
 
+/** Reads a CSV or Excel file in the browser. Nothing is sent anywhere until the owner saves. */
+async function readSpreadsheet(file: File): Promise<SheetResult> {
+  if (/\.xlsx$/i.test(file.name)) {
+    // Loaded only when someone uploads a sheet, so the page stays light for everyone else.
+    const { readSheet } = await import("read-excel-file/browser");
+    return draftsFromRows(await readSheet(file));
+  }
+  return draftsFromRows(parseCsv(await file.text()));
+}
+
+function SheetUpload({ onDrafts }: { onDrafts: (drafts: ProductDraft[]) => void }) {
+  const t = useTranslations("products");
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<{ error: boolean; text: string } | null>(null);
+
+  async function onFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (!/\.(csv|xlsx)$/i.test(file.name)) {
+      setMessage({ error: true, text: t("errors.sheetType") });
+      return;
+    }
+    setBusy(true);
+    setMessage(null);
+    let result: SheetResult;
+    try {
+      result = await readSpreadsheet(file);
+    } catch {
+      result = { ok: false, code: "sheetEmpty" };
+    }
+    setBusy(false);
+    if (!result.ok) {
+      setMessage({ error: true, text: t(`errors.${result.code}`) });
+      return;
+    }
+    onDrafts(result.drafts);
+    const notes = [t("sheetFound", { count: result.drafts.length })];
+    if (result.skipped > 0) notes.push(t("sheetSkipped", { count: result.skipped }));
+    if (result.truncated) notes.push(t("sheetTruncated"));
+    setMessage({ error: false, text: notes.join(" ") });
+  }
+
+  return (
+    <section className="rounded-md bg-panel p-4 md:p-5">
+      <p className="font-medium">{t("sheetTitle")}</p>
+      <p className="mt-1 text-sm text-muted">{t("sheetBody")}</p>
+      <div className="mt-4 flex flex-wrap items-center gap-4">
+        <label className={`${primary} inline-flex cursor-pointer items-center gap-2 has-[:disabled]:cursor-default has-[:disabled]:opacity-40`}>
+          <FileSpreadsheet aria-hidden size={16} strokeWidth={1.5} />
+          {busy ? t("reading") : t("sheetChoose")}
+          <input
+            type="file"
+            accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            onChange={onFile}
+            disabled={busy}
+            className="sr-only"
+          />
+        </label>
+        <a href="/sample-products.csv" download className={quiet}>
+          {t("sheetSample")}
+        </a>
+      </div>
+      {message && (
+        <p role={message.error ? "alert" : "status"} className={`mt-3 text-sm ${message.error ? "text-accent" : "text-ink"}`}>
+          {message.text}
+        </p>
+      )}
+    </section>
+  );
+}
+
+/** A single price can be changed right in the list, the most common edit. */
+function QuickPrice({ product, onSave }: { product: ProductRow; onSave: (rupees: number) => void }) {
+  const t = useTranslations("products");
+  const current = product.price_paise === null ? "" : String(product.price_paise / 100);
+  const [value, setValue] = useState(current);
+  // Follows saves and roll-backs made elsewhere, such as a failed save.
+  const [shown, setShown] = useState(current);
+  if (shown !== current) {
+    setShown(current);
+    setValue(current);
+  }
+
+  function commit() {
+    const rupees = Number(value);
+    if (value.trim() === "" || !Number.isFinite(rupees) || rupees < 0) {
+      setValue(current);
+      return;
+    }
+    if (value !== current) onSave(rupees);
+  }
+
+  return (
+    <label className="flex items-center gap-1 text-sm text-muted">
+      <span aria-hidden>₹</span>
+      <input
+        type="text"
+        inputMode="decimal"
+        aria-label={t("priceOf", { product: product.name })}
+        value={value}
+        onChange={(event) => setValue(event.target.value.replace(/[^\d.]/g, ""))}
+        onBlur={commit}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") event.currentTarget.blur();
+          if (event.key === "Escape") setValue(current);
+        }}
+        className="h-9 w-20 rounded-md border border-line bg-card px-2 text-base text-ink tabular-nums"
+      />
+      {product.unit && <span>/ {product.unit}</span>}
+    </label>
+  );
+}
+
+/** Products with one plain price, which is what the quick price box can change. */
+const hasSinglePrice = (product: ProductRow) =>
+  product.price_paise !== null &&
+  product.options.length === 0 &&
+  (product.price_max_paise === null || product.price_max_paise === product.price_paise);
+
 type NewItem = { key: number; draft: ProductDraft };
 type Props = { shopId: string; shopKind: ShopKind; initialProducts: ProductRow[] };
 
@@ -188,7 +360,35 @@ export function ProductManager({ shopId, shopKind, initialProducts }: Props) {
   const [editing, setEditing] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [voice, setVoice] = useState(false);
+  const [sheet, setSheet] = useState(false);
+  const newListTop = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [bulk, setBulk] = useState<{ done: number; total: number } | null>(null);
+  const [bulkFailed, setBulkFailed] = useState(0);
+
+  // Each open new-product form, keyed like newItems, so "Save all" can save them.
+  const savers = useRef(new Map<number, () => Promise<boolean>>());
+  const register = useCallback((key: number, save: () => Promise<boolean>) => {
+    savers.current.set(key, save);
+    return () => {
+      savers.current.delete(key);
+    };
+  }, []);
+
+  /** Saves every new product in order, one after another, so the shop keeps their order. */
+  async function saveAll() {
+    const keys = newItems.map((item) => item.key);
+    setBulkFailed(0);
+    setBulk({ done: 0, total: keys.length });
+    let failed = 0;
+    for (const [index, key] of keys.entries()) {
+      const save = savers.current.get(key);
+      if (!(await save?.())) failed += 1;
+      setBulk({ done: index + 1, total: keys.length });
+    }
+    setBulk(null);
+    setBulkFailed(failed);
+  }
 
   const groups = [...new Set(products.flatMap((product) => product.category?.trim() || []))];
 
@@ -214,6 +414,24 @@ export function ProductManager({ shopId, shopKind, initialProducts }: Props) {
     setProducts((current) => [...current, result.data]);
     setNewItems((current) => current.filter((item) => item.key !== key));
     return null;
+  }
+
+  async function quickPrice(product: ProductRow, rupees: number) {
+    setError(null);
+    const draft = { ...draftFromRow(product), price: String(rupees) };
+    replace({ ...product, price_paise: Math.round(rupees * 100) });
+    const result = await updateProduct(shopId, product.id, payloadFromDraft(draft));
+    if (result.ok) {
+      replace(result.data);
+    } else {
+      replace(product);
+      setError("failed");
+    }
+  }
+
+  function copy(product: ProductRow) {
+    addDrafts([{ ...draftFromRow(product), name: t("copyName", { name: product.name }) }]);
+    newListTop.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   async function toggleStock(product: ProductRow) {
@@ -265,9 +483,30 @@ export function ProductManager({ shopId, shopKind, initialProducts }: Props) {
           <Mic aria-hidden size={16} strokeWidth={1.5} />
           {t("addByVoice")}
         </button>
+        <button type="button" onClick={() => setSheet(!sheet)} aria-expanded={sheet} className={`${secondary} inline-flex items-center gap-2`}>
+          <FileSpreadsheet aria-hidden size={16} strokeWidth={1.5} />
+          {t("addBySheet")}
+        </button>
       </div>
 
       {voice && <VoiceAdd shopId={shopId} onDrafts={addDrafts} />}
+      {sheet && <SheetUpload onDrafts={addDrafts} />}
+
+      <div ref={newListTop} className="scroll-mt-4" />
+
+      {newItems.length > 1 && (
+        <div className="flex flex-wrap items-center gap-3 rounded-md border border-brand/30 bg-panel p-4">
+          <button type="button" onClick={saveAll} disabled={bulk !== null} className={primary}>
+            {bulk ? t("savingAll", { done: bulk.done, total: bulk.total }) : t("saveAll", { count: newItems.length })}
+          </button>
+          <span className="text-sm text-muted">{t("saveAllHint")}</span>
+        </div>
+      )}
+      {bulkFailed > 0 && newItems.length > 0 && (
+        <p role="alert" className="text-sm text-accent">
+          {t("saveAllFailed", { count: bulkFailed })}
+        </p>
+      )}
 
       {newItems.map(({ key, draft }) => (
         <ProductEditor
@@ -277,6 +516,8 @@ export function ProductManager({ shopId, shopKind, initialProducts }: Props) {
           shopKind={shopKind}
           groups={groups}
           onSave={(payload) => create(key, payload)}
+          register={register}
+          saveKey={key}
           onCancel={() => setNewItems((current) => current.filter((item) => item.key !== key))}
         />
       ))}
@@ -316,18 +557,30 @@ export function ProductManager({ shopId, shopKind, initialProducts }: Props) {
                   <div className="min-w-48 flex-1">
                     <p className="font-medium break-words">{product.name}</p>
                     <p className="text-sm text-muted">
-                      {product.category && <span>{product.category} · </span>}
-                      <Price product={product} />
+                      {product.category && <span>{product.category}</span>}
+                      {!hasSinglePrice(product) && (
+                        <>
+                          {product.category && " · "}
+                          <Price product={product} />
+                        </>
+                      )}
                     </p>
                     <Variety product={product} className="text-sm text-muted" />
                   </div>
                   <div className="flex flex-wrap items-center gap-4">
+                    {hasSinglePrice(product) && (
+                      <QuickPrice product={product} onSave={(rupees) => quickPrice(product, rupees)} />
+                    )}
                     <label className="flex items-center gap-1.5 text-sm text-muted">
                       <input type="checkbox" checked={product.is_available} onChange={() => toggleStock(product)} />
                       {t("inStock")}
                     </label>
                     <button type="button" onClick={() => setEditing(product.id)} className={quiet}>
                       {t("edit")}
+                    </button>
+                    <button type="button" onClick={() => copy(product)} className={`${quiet} inline-flex items-center gap-1`}>
+                      <Copy aria-hidden size={13} strokeWidth={1.5} />
+                      {t("copy")}
                     </button>
                     {deleting === product.id ? (
                       <>

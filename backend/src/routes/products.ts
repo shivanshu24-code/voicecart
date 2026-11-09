@@ -14,6 +14,7 @@ import { shopIdSchema } from "../schemas/shop.schema.js";
 import { assertShopImages, productImages } from "../services/images.js";
 import { mergeExtraction } from "../services/merge.js";
 import { productRow } from "../services/pricing.js";
+import { readPhotoUpload } from "../services/read-photo.js";
 import { transcribeUpload } from "../services/transcribe.js";
 
 const MAX_PRODUCTS = 200;
@@ -119,6 +120,12 @@ export async function productRoutes(app: FastifyInstance) {
     const { id } = shopIdSchema.parse(request.params);
     await requireOwnShop(request, id);
     return ok(await transcribeUpload(request, id));
+  });
+
+  app.post("/api/shops/:id/products/read-photo", async (request) => {
+    const { id } = shopIdSchema.parse(request.params);
+    await requireOwnShop(request, id);
+    return ok(await readPhotoUpload(request, id));
   });
 
   // Returns drafts only. Nothing is saved until the owner confirms each one.

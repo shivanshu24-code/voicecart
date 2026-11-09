@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { api } from "@/lib/api";
 import { runAction } from "@/lib/run-action";
+import { refreshStorefronts } from "@/lib/storefront-cache";
 
 export const checkSlug = async (shopId: string, value: string) =>
   runAction(() =>
@@ -19,12 +20,14 @@ export async function publishShop(shopId: string, slug: string, template: string
     }),
   );
   revalidatePath("/dashboard");
+  if (result.ok) refreshStorefronts();
   return result;
 }
 
 export async function unpublishShop(shopId: string) {
   const result = await runAction(() => api(`/api/shops/${shopId}/unpublish`, { method: "POST" }));
   revalidatePath("/dashboard");
+  if (result.ok) refreshStorefronts();
   return result;
 }
 
@@ -33,6 +36,7 @@ export async function saveShopProfile(shopId: string, profile: unknown) {
     api(`/api/shops/${shopId}/profile`, { method: "PUT", body: JSON.stringify(profile) }),
   );
   revalidatePath("/dashboard");
+  if (result.ok) refreshStorefronts();
   return result;
 }
 
@@ -40,13 +44,17 @@ export async function saveBranding(
   shopId: string,
   branding: { logo_url?: string | null; banner_url?: string | null },
 ) {
-  return runAction(() =>
+  const result = await runAction(() =>
     api(`/api/shops/${shopId}`, { method: "PATCH", body: JSON.stringify(branding) }),
   );
+  if (result.ok) refreshStorefronts();
+  return result;
 }
 
 export async function saveTemplate(shopId: string, template: string) {
-  return runAction(() =>
+  const result = await runAction(() =>
     api(`/api/shops/${shopId}`, { method: "PATCH", body: JSON.stringify({ template }) }),
   );
+  if (result.ok) refreshStorefronts();
+  return result;
 }

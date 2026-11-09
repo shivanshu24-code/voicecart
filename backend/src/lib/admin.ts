@@ -35,7 +35,7 @@ export async function recordAiUsage(usage: {
   user_id: string;
   shop_id: string;
   provider: string;
-  operation: "transcribe" | "extract";
+  operation: "transcribe" | "extract" | "read_photo";
   input_tokens?: number | null;
   output_tokens?: number | null;
   audio_bytes?: number;

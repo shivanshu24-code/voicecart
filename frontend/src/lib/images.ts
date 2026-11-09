@@ -9,3 +9,21 @@ export function imageUrl(url: string, { width, height, fit = "fill" }: Size) {
   const size = [`w_${width}`, height && `h_${height}`].filter(Boolean).join(",");
   return url.replace("/image/upload/", `/image/upload/f_auto,q_auto,${crop},${size}/`);
 }
+
+/** Widths a phone, tablet or laptop might pick from, smallest first. */
+const STEPS = [480, 800, 1200];
+
+/**
+ * Smaller copies of a large photo, so a phone downloads a 480px banner instead
+ * of the 1920px one a wide screen needs. Returns undefined for small photos.
+ */
+export function imageSrcSet(url: string, { width, height, fit = "fill" }: Size) {
+  if (width <= STEPS[0]) return undefined;
+  const widths = [...STEPS.filter((step) => step < width), width];
+  return widths
+    .map((w) => {
+      const h = height && Math.round((height * w) / width);
+      return `${imageUrl(url, { width: w, height: h, fit })} ${w}w`;
+    })
+    .join(", ");
+}

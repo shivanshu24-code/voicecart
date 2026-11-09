@@ -11,13 +11,18 @@ import "./globals.css";
 
 const instrument = Instrument_Sans({ variable: "--font-instrument", subsets: ["latin"] });
 const newsreader = Newsreader({ variable: "--font-newsreader", subsets: ["latin"] });
+// Hindi fonts are big and only needed when Hindi text is on the page. Not
+// preloading them lets the browser fetch them only when it meets Devanagari,
+// so English pages on slow phones skip the download entirely.
 const notoDevanagari = Noto_Sans_Devanagari({
   variable: "--font-noto-devanagari",
   subsets: ["devanagari"],
+  preload: false,
 });
 const notoSerifDevanagari = Noto_Serif_Devanagari({
   variable: "--font-noto-serif-devanagari",
   subsets: ["devanagari"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
